@@ -126,7 +126,4 @@ if __name__ == "__main__":
         if amount and token_from and token_to:
             status_message = swap_token(amount, token_from, token_to)
             print(status_message)
-        else:
-            print("❌ Invalid command! Example: swap 100 bkga for gaokub")
-    else:
-        print("❌ No command received! Please provide input.")
+        
