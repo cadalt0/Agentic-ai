@@ -46,7 +46,7 @@ def chat():
         except FileNotFoundError:
             responses.append(f"{script} ➜ Error: Script not found")
         except Exception as e:
-            responses.append(f"{script} ➜ Error: {str(e)}")
+            responses.append(f"")
 
     return jsonify({"response": "\n".join(responses) or "No response from scripts."})
 
