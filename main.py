@@ -14,7 +14,7 @@ def chat():
     if not user_input:
         return jsonify({"response": "Please enter a message!"})
 
-    scripts = ["3x.py", "2x.py", "5x.py" ,"7x.py"]  # Your script names
+    scripts = ["2x.py",]  # Your script names
     responses = []
 
     for script in scripts:
