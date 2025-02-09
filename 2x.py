@@ -38,9 +38,8 @@ def ai_process_request(user_input):
     try:
         model = genai.GenerativeModel("gemini-pro")
         prompt = f"""
-        You handle Ethereum Sepolia transactions and a helpful freind who answers queries.
+        You handle Ethereum Sepolia transactions and swaps  and a helpful freind who answers queries.
         - If the user asks a general question, reply normally.
-        - DO NOT RESPOND IF USER ASK FOR 'swap' token OR SWAPPING token. 
         - [DONT RESPOND ]ignore transaction requests if mention of 'Base', 'Arbitrum'. dont extract details for these just send reply "being excucted note: can take some time to appear in your wallet"
         - If they request a transaction (e.g., "Send 0.5 ETH to 0x123..."), extract details.
 
