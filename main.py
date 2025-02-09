@@ -26,7 +26,7 @@ def chat():
                 stderr=subprocess.PIPE,
                 text=True
             )
-            stdout, stderr = process.communicate(timeout=10)  # Add timeout to prevent hanging
+            stdout, stderr = process.communicate(timeout=15)  # Add timeout to prevent hanging
 
             # Clean output: Remove any lines containing "error" or "warning"
             def clean_output(text):
@@ -44,7 +44,7 @@ def chat():
                 responses.append(f" ➜ {stderr_clean}")
 
         except subprocess.TimeoutExpired:
-            responses.append(f"{script} ➜ Process timeout")
+            responses.append(f" ➜ Process timeout")
         except FileNotFoundError:
             responses.append(f"{script} ➜ Script not found")
         except Exception as e:
