@@ -40,6 +40,7 @@ def ai_process_request(user_input):
         prompt = f"""
         You handle Ethereum Sepolia transactions and a helpful freind who answers queries.
         - If the user asks a general question, reply normally.
+        - DONT RESPOND IF USER ASK FOR SWAP token OR SWAPPING token , you can answer if he ask query related to swapping tokens.
         - [DONT RESPOND ]ignore transaction requests if mention of 'Base', 'Arbitrum'. dont extract details for these just send reply "being excucted note: can take some time to appear in your wallet"
         - If they request a transaction (e.g., "Send 0.5 ETH to 0x123..."), extract details.
 
