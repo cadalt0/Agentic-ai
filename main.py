@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, jsonify
 import subprocess
 
@@ -9,12 +10,12 @@ def index():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_input = request.json.get("message", "")
+    user_input = request.json.get("message", "").strip()
 
     if not user_input:
         return jsonify({"response": "Please enter a message!"})
 
-    scripts = ["2x.py",]  # Your script names
+    scripts = ["3x.py", "2x.py", "5x.py", "7x.py"]  # Your script names
     responses = []
 
     for script in scripts:
@@ -25,7 +26,7 @@ def chat():
                 stderr=subprocess.PIPE,
                 text=True
             )
-            stdout, stderr = process.communicate()
+            stdout, stderr = process.communicate(timeout=10)  # Add timeout to prevent hanging
 
             # Clean output
             def clean_output(text):
@@ -37,11 +38,18 @@ def chat():
             stdout_clean = clean_output(stdout)
             if stdout_clean:
                 responses.append(f" ➜ {stdout_clean}")
+            elif stderr:
+                responses.append(f"{script} ➜ Error: {stderr.strip()}")
 
+        except subprocess.TimeoutExpired:
+            responses.append(f"{script} ➜ Error: Process timeout")
+        except FileNotFoundError:
+            responses.append(f"{script} ➜ Error: Script not found")
         except Exception as e:
-            responses.append(f"{script} ➜ Error: {e}")
+            responses.append(f"{script} ➜ Error: {str(e)}")
 
     return jsonify({"response": "\n".join(responses) or "No response from scripts."})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.getenv("PORT", 5000))  # Get PORT from Heroku
+    app.run(host="0.0.0.0", port=port, debug=False)  # Bind to 0.0.0.0
