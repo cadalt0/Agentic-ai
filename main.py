@@ -28,7 +28,7 @@ def chat():
             )
             stdout, stderr = process.communicate(timeout=10)  # Add timeout to prevent hanging
 
-            # Clean output
+            # Clean output: Remove any lines containing "error" or "warning"
             def clean_output(text):
                 return "\n".join(
                     line for line in text.split("\n")
@@ -36,19 +36,22 @@ def chat():
                 ).strip()
 
             stdout_clean = clean_output(stdout)
+            stderr_clean = clean_output(stderr)
+
             if stdout_clean:
                 responses.append(f" ➜ {stdout_clean}")
-            elif stderr:
-                responses.append(f"{script} ➜ Error: {stderr.strip()}")
+            elif stderr_clean:  # If no stdout, but there's a cleaned stderr
+                responses.append(f" ➜ {stderr_clean}")
 
         except subprocess.TimeoutExpired:
-            responses.append(f"{script} ➜ Error: Process timeout")
+            responses.append(f"{script} ➜ Process timeout")
         except FileNotFoundError:
-            responses.append(f"{script} ➜ Error: Script not found")
+            responses.append(f"{script} ➜ Script not found")
         except Exception as e:
-            responses.append(f"")
+            responses.append(f"{script} ➜ Unknown error occurred")
 
-    return jsonify({"response": "\n".join(responses) or "No response from scripts."})
+    # Ensure empty responses aren't returned
+    return jsonify({"response": "\n".join(responses) or "No valid response from scripts."})
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))  # Get PORT from Heroku
